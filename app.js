@@ -1,3 +1,7 @@
+
+if(process.env.NODE_ENV !== 'production'){
+    require('dotenv').config()
+}
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -18,9 +22,13 @@ const userRoutes = require('./ResourceRoutes/users');
 
 const resourcesRoutes = require('./ResourceRoutes/resources');
 const reviewsRoutes = require('./ResourceRoutes/reviews');
+const dotenv = require("dotenv");
+dotenv.config();
 
 
-mongoose.connect('mongodb://localhost:27017/spirit-world',{
+const dbUrl = process.env.DB_URL || process.env.DATABASE;
+
+mongoose.connect(dbUrl,{
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -44,9 +52,11 @@ app.use(express.urlencoded({extended: true}))
 app.use(MethodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')));
 
+const secret = process.env.SECRET || 'This is a Secret';
+
 // cookies
 const sessionConfig={
-    secret: 'This is a Secret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie:{

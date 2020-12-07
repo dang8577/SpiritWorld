@@ -1,4 +1,5 @@
 <% layout('/WebpageLayouts/Decoration') %>
+<link rel="stylesheet" href="/Styles/EditResource.css">
 
 <!--<h1>Edit Resource</h1>
     <form action="/resources/<%= resource._id%>?_method=PUT" method="POST">
@@ -18,9 +19,12 @@
 
 <div class="row">
 
-    <div class="col-6 offset-3">
+    <div class="col-xl-8 offset-xl-2 col-md-8 offset-md-2 mb-3 mt-0">
+        <div class="card shadow">
+            <div class="div card-body">
         <h1 class="text-center">Edit Resource</h1>
-        <form action="/resources/<%= resource._id%>?_method=PUT" method="POST" novalidate class="validated-form">
+        <form action="/resources/<%= resource._id%>?_method=PUT" method="POST" novalidate class="validated-form"
+              enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" id="title" name="resource[title]" value="<%= resource.title%>" required>
@@ -37,13 +41,15 @@
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="image">Image Url</label>
-                <input class="form-control" type="text" id="location" name="resource[image]" value="<%= resource.image%>" required>
+            <!--<div class="mb-3">
+                <label class="form-label" for="image">Add Images</label>
+                <input type="file" name="image" id="image" multiple>
+                &lt;!&ndash;<input class="form-control" type="text" id="location" name="resource[image]" value="<%= resource.image%>" required>
                 <div class="valid-feedback">
                     Image Link is good
-                </div>
-            </div>
+                </div>&ndash;&gt;
+            </div>-->
+
 
             <div class="mb-3">
                 <label class="form-label" for="Category">Resource Category</label>
@@ -71,10 +77,33 @@
             </div>
 
             <div class="mb-3">
+                <!--<label for="">Upload Images</label>-->
+                <div class="form-file custom-file">
+                    <input type="file" class="form-file-input" id="image" name="image" multiple>
+                    <label class="form-file-label" for="image">
+                        <span class="form-file-text custom-file-label">Add more image(s)..</span>
+                        <!--<span class="form-file-button">Browse</span>-->
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <% resource.images.forEach(function(img,i) { %>
+                    <img src="<%= img.thumbnail %>" class="img-thumbnail" alt="">
+                <div class="form-check-inline">
+                    <input type="checkbox" id="image-<%=i%>" name="deleteImages[]" value="<%=img.filename%>">
+                </div>
+                    <label for="image-<%=i%>">Delete?</label>
+                <%})%>
+            </div>
+
+            <div class="mb-3">
                 <button class="btn btn-info">Update Resource</button>
             </div>
 
         </form>
         <a href="/resources">All Resources</a>
+    </div>
+        </div>
     </div>
 </div>

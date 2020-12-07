@@ -27,12 +27,29 @@ const randomDataDB = async() =>{
     for(let i = 0; i < 10; i++){
         const ran = Math.floor(Math.random() * 1000);
         const resource = new Resource({
+            //USER ID KARIK
             author: '5fc0b3c54cd5d712ccfc4fe0',
             location: `${buildings[ran].Room}, ${buildings[ran].Building}`,
             title: `${sample(firstTitle)} ${sample(secondTitle)}`,
             category: 'School Resources',
-            image: 'https://source.unsplash.com/1600x900/?school,university',
-            content: 'The Society of Asian Scientists & Engineers (SASE) at San Jose State University aims to fulfill the three pillar mission of SASE National'
+            //image: 'https://source.unsplash.com/1600x900/?school,university',
+            content: 'The Society of Asian Scientists & Engineers (SASE) at San Jose State University aims to fulfill the three pillar mission of SASE National',
+            geometry:{
+                "type": "Point",
+                "corrdinates": [buildings[ran].longitude,
+                buildings[ran].latitude
+                ]
+            },
+            images: [
+                {
+                    url: 'https://res.cloudinary.com/drfqvbb8y/image/upload/v1606567516/SpiritWorld/qh5m3klzfsckgphrfbru.jpg',
+                    filename: 'SpiritWorld/qh5m3klzfsckgphrfbru'
+                },
+                {
+                    url: 'https://res.cloudinary.com/drfqvbb8y/image/upload/v1606567422/SpiritWorld/ulq3dgd9l912v5dc3au4.jpg',
+                    filename: 'SpiritWorld/ulq3dgd9l912v5dc3au4'
+                }
+            ],
         })
         await resource.save();
     }

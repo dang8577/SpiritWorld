@@ -1,10 +1,34 @@
 <% layout('/WebpageLayouts/Decoration') %>
 <link rel="stylesheet" href="/Styles/RatingStars.css">
 
+
+
 <div class="row">
     <div class="col-6">
+        <div id='map' style='width: 400px; height: 300px;'></div>
+        <div id="resourceCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <% resource.images.forEach((image,i) => { %>
+                <div class="carousel-item <%= i === 0 ? 'active' : ''%>">
+                    <img src="<%= image.url %>" class="d-block w-100" alt="">
+                </div>
+                <% }) %>
+            </div>
+
+            <% if(resource.images.length > 1) {%>
+            <a class="carousel-control-prev" href="#resourceCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#resourceCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+            <% } %>
+
+        </div>
+
         <div class="card mb-3">
-            <img src="<%= resource.image%>" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title"><%= resource.title%></h5>
                 <p class="card-text"><%= resource.content%></p>
@@ -14,11 +38,11 @@
                 <li class="list-group-item">Uploaded by <%= resource.author.username%></li>
                 <li class="list-group-item"><%= resource.category%></li>
             </ul>
-            <!--Replace live below with if(currentUser._id.equals('5fc0bfa1b5254a2488b31aa8')) {
+            <!--Replace live below with if(currentUser && currentUser._id.equals('5fc0bfa1b5254a2488b31aa8')) {
             will make Teo1 username as admin. Edit and Delete button only appears for admin -->
             <!-- if currentUser exists and id is matched then current user is author and can have accesses -->
             <!--if(currentUser && resource.author.equals(currentUser._id))-->
-            <% if(currentUser && resource.author.equals(currentUser._id)) {%>
+            <% if(currentUser && currentUser._id.equals('5fc4acacee35083248601578')) {%>
             <div class="card-body">
                 <a class="card-link btn btn-info" href="/resources/<%= resource._id%>/EditResource">Edit Resource</a>
                 <form class="d-inline" action="/resources/<%=resource._id%>?_method=DELETE" method="POST">
@@ -32,6 +56,7 @@
         </div>
     </div>
     <div class="col-6">
+        <div id="map"></div>
         <% if(currentUser) {%>
         <h2>Review for this resource: </h2>
         <form action="/resources/<%= resource._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
@@ -67,12 +92,11 @@
         <% for(let review of resource.reviews) { %>
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title"><%= review.author.username%></h5>
-                    <!--<h5>&#9733;&#9733;&#9733;&#9734;&#9734;</h5>-->
+                    <h5 class="card-title"> <%= review.author.username%> </h5>
                     <p class="starability-result" data-rating="<%= review.rating%>">
                         Rated: <%= review.rating%> stars
                     </p>
-                    <!--<h6 class="card-subtitle mb-2 text-muted">By <%= review.author.username%></h6>-->
+                    <!--<h6 class="card-subtitle mb-2 text-muted">By review.author.username</h6>-->
                     <p class="card-text">Review: <%= review.body %></p>
                     <% if(currentUser && review.author.equals(currentUser._id)) { %>
                     <form action="/resources/<%=resource._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
@@ -84,5 +108,20 @@
         <% } %>
     </div>
 </div>
+
+<!--<script>
+    mapboxgl.accessToken = '<%-process.env.MAPBOX_TOKEN %>';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+        center: [-74.5, 40], // starting position [lng, lat]
+        zoom: 4 // starting zoom
+    });
+</script>-->
+<script>
+    const mapToken = '<%-process.env.MAPBOX_TOKEN %>';
+    const resource = <%- JSON.stringify(resource)%>
+</script>
+<script src="/Scripts/showPageMap.js"></script>
 
 
